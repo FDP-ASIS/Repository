@@ -16,8 +16,6 @@ $start_time = Get-Date
 Import-Module BitsTransfer
 Start-BitsTransfer -Source $url -Destination $dest_folder_exe
 
-Write-Output "Finished downloading"
-
 # Source of exe file location
 $source_exe_location = "$Env:Programfiles\$file_name"
 
