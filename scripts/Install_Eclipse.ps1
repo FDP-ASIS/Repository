@@ -1,16 +1,13 @@
-﻿# Url file to download
+﻿# Url zip file to download
 $url = "http://mirror.dkm.cz/eclipse/technology/epp/downloads/release/2020-03/R/eclipse-java-2020-03-R-win32-x86_64.zip"
 
 Write-Output "Installing..."
 
-# Get name of the file
+# Get the name of the file
 $file_name = [System.IO.Path]::GetFileName($url)
 
-# Destination folder on computer
+# Destination folder to save file on computer
 $dest_folder = [Environment]::GetEnvironmentVariable("ProgramFiles")
-
-# Get cuurent time and date
-$start_time = Get-Date
 
 # Start downloading
 Import-Module BitsTransfer
@@ -29,6 +26,7 @@ $source_zip_location = "$Env:Programfiles\$file_name"
 Expand-Archive -LiteralPath $source_zip_location -DestinationPath "$dest_folder\$folder_data_name"
 Write-Output "Finished extracting"
 
+# Shortcut icon source and location
 $shortcut_dest_location = “C:\Users\$env:UserName\Desktop\eclipse.lnk”
 $source_icon_location = "$dest_folder\$folder_data_name\eclipse\eclipse.exe"
 
@@ -38,8 +36,8 @@ $Shortcut = $WScriptShell.CreateShortcut($shortcut_dest_location)
 $Shortcut.TargetPath = $source_icon_location
 $Shortcut.Save()
 
-# Remove zip file
+# Remove zip file from computer
 Remove-Item $source_zip_location
 
 Write-Output "Your folder directory located: $dest_folder\$folder_data_name"
-Write-Output "Done"
+Write-Output "Done installing eclipse on your computer and create shortcut on desktop"

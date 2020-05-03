@@ -1,4 +1,4 @@
-# Url file to download
+# Url zip file to download
 $url = "https://www.python.org/ftp/python/3.7.7/python-3.7.7-embed-amd64.zip"
 
 Write-Output "Installing..."
@@ -8,9 +8,6 @@ $file_name = [System.IO.Path]::GetFileName($url)
 
 # Destination folder on computer
 $dest_folder = [Environment]::GetEnvironmentVariable("ProgramFiles")
-
-# Get cuurent time and date
-$start_time = Get-Date
 
 # Start downloading
 Import-Module BitsTransfer
@@ -29,11 +26,13 @@ $source_zip_location = "$Env:Programfiles\$file_name"
 Expand-Archive -LiteralPath $source_zip_location -DestinationPath "$dest_folder\$folder_data_name\"
 Write-Output "Finished extracting"
 
-# Remove zip file
+# Remove zip file from computer
 Remove-Item $source_zip_location
 
 Write-Output "Your folder directory located: $dest_folder\$folder_data_name"
 
+# Setting path variables on computer
 Write-Output 'Setting up Path variables.'
 [System.Environment]::SetEnvironmentVariable("PATH", $Env:Path + ";"+"$dest_folder\$folder_data_name\", "Machine")
-Write-Output "Done"
+
+Write-Output "Done installing python on your computer"
