@@ -13,7 +13,8 @@ $dest_folder = [Environment]::GetEnvironmentVariable("ProgramFiles")
 $folder_data_name = [string]$file_name.TrimEnd(".zip")
 
 # Location shortcut file on desktop
-$shortcut_dest_location = "C:\Users\$env:UserName\Desktop\eclipse.lnk"
+$DesktopPath = [Environment]::GetFolderPath("Desktop")
+$shortcut_dest_location = $DesktopPath+"\eclipse.lnk"
 
 # Remove shortuct
 Remove-Item $shortcut_dest_location

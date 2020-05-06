@@ -16,7 +16,7 @@ $client.downloadFile($url, $exe_dest)
 
 # Create a new folder name for exe data destination
 $folder_data_name = [Environment]::GetEnvironmentVariable("ProgramFiles")+"\Java\jre "+$JDK_FULL_VER
-$config_file= $PSScriptRoot+"silent_jdk.config"
+$config_file= $PSScriptRoot+"\silent_jdk.config"
 
 # Install the programm
 Start-Process -Wait -FilePath $exe_dest -Argument INSTALLCFG=$config_file -PassThru

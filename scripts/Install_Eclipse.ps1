@@ -27,7 +27,8 @@ Expand-Archive -LiteralPath $source_zip_location -DestinationPath "$dest_folder\
 Write-Output "Finished extracting"
 
 # Shortcut icon source and location
-$shortcut_dest_location = “C:\Users\$env:UserName\Desktop\eclipse.lnk”
+$DesktopPath = [Environment]::GetFolderPath("Desktop")
+$shortcut_dest_location = $DesktopPath+"\eclipse.lnk"
 $source_icon_location = "$dest_folder\$folder_data_name\eclipse\eclipse.exe"
 
 # Create shortcut on desktop

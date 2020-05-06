@@ -14,7 +14,8 @@ $uninstall_directory="$Env:Programfiles\$folder_data_name\bin\uninstall.exe"
 Start-Process -Wait -FilePath $uninstall_directory -Argument "/S" -PassThru
 
 # Remove shortcut from desktop
-$shortcut_dest_location = "C:\Users\$env:UserName\Desktop\pycharm-community.lnk"
+$DesktopPath = [Environment]::GetFolderPath("Desktop")
+$shortcut_dest_location = $DesktopPath+"\pycharm-community.lnk"
 Remove-Item $shortcut_dest_location
 
 Write-Output "Done removing pycharm from your computer"

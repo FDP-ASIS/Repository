@@ -23,7 +23,7 @@ $folder_data_name = [string]$file_name.TrimEnd(".exe")
 $dest_directory="$Env:Programfiles\$folder_data_name"
 
 # Config file for install
-$config_file= $PSScriptRoot+"silent_pycharm.config"
+$config_file= $PSScriptRoot+"\silent_pycharm.config"
 
 # Install the programm
 Start-Process -Wait -FilePath $source_exe_location -Argument "/S /CONFIG=$config_file /D=$dest_directory" -PassThru
@@ -31,7 +31,8 @@ Start-Process -Wait -FilePath $source_exe_location -Argument "/S /CONFIG=$config
 Write-Output "Finished installing"
 
 # Shortcut icon source and location
-$shortcut_dest_location = "C:\Users\$env:UserName\Desktop\pycharm-community.lnk"
+$DesktopPath = [Environment]::GetFolderPath("Desktop")
+$shortcut_dest_location = $DesktopPath+"\pycharm-community.lnk"
 $source_icon_location = "$dest_directory\bin\pycharm64.exe"
 
 # Create shortcut on desktop
