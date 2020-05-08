@@ -1,0 +1,7 @@
+{
+  "name": "Repository",
+  "version": "1.0.0",
+  "dependencies": {
+    "node-powershell": "^4.0.0"
+  }
+}
