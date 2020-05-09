@@ -1,7 +1,9 @@
 $Install ={
-    function run
-    {
-        param ($exe_dest)
+    function run{
+        param (
+            [string] $exe_dest
+        )
+
         Write-Output 'Installing...'
 
         # Url exe file to download
@@ -16,16 +18,12 @@ $Install ={
     }
 }
 
-$Install2 ={
-    function run
-    {
-        param ($folder_data_name)
-
-        # JDK version name
-        $JDK_FULL_VER = '8u151-b12'
-
-        # Download exe file
-        $exe_dest = [Environment]::GetEnvironmentVariable('ProgramFiles') + '\'+$JDK_FULL_VER+'-x64.exe'
+$Path_Var ={
+    function run {
+        param (
+            [string] $exe_dest,
+            [string] $folder_data_name
+        )
 
         # Remove exe file
         Remove-Item $exe_dest
@@ -54,9 +52,9 @@ $folder_data_name = [Environment]::GetEnvironmentVariable('ProgramFiles') + '\Ja
 $location_config= $PSScriptRoot
 $config_file = $location_config + '\silent_jdk.config'
 
-
 $startProc = Start-Process powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run('$exe_dest')}"
 $startProc.WaitForExit()
+
 Start-Process -Wait -FilePath $exe_dest -Argument INSTALLCFG=$config_file -PassThru
-$startProc3=Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install2 run('$folder_data_name')}"
-$startProc3.WaitForExit()
+
+Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Path_Var run '$exe_dest' '$folder_data_name'}"

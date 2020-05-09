@@ -36,5 +36,4 @@ $startProc.WaitForExit()
 
 Start-Process -Wait -FilePath $uninstall_directory -Argument "/S" -PassThru
 
-$startProc3=Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Uninstall2 run}"
-$startProc3.WaitForExit()
+Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Uninstall2 run}"
