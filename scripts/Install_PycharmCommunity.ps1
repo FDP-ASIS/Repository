@@ -32,6 +32,15 @@ $Install2 ={
         $Shortcut.TargetPath = $source_icon_location
         $Shortcut.Save()
 
+        # Url exe file to download
+        $url = 'https://download-cf.jetbrains.com/python/pycharm-community-2020.1.exe'
+
+        # Get name of the file
+        $file_name = [System.IO.Path]::GetFileName($url)
+
+        # Source of exe file location
+        $source_exe_location= $Env:Programfiles + '\' + $file_name
+
         # Remove exe file from computer
         Remove-Item $source_exe_location
 
@@ -65,5 +74,5 @@ $config_file = $location_config +'\silent_pycharm.config'
 $startProc = Start-Process powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run('$dest_folder_exe')}"
 $startProc.WaitForExit()
 Start-Process -Wait -FilePath $source_exe_location -Argument "/S /CONFIG=$config_file /D=$dest_directory"
-$startProc3=Start-Process -Wait powershell -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Install2 run('$dest_directory')}"
+$startProc3=Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Install2 run('$dest_directory')}"
 $startProc3.WaitForExit()
