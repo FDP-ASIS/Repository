@@ -11,7 +11,16 @@ $Uninstall2 = {
         # Remove shortcut from desktop
         $DesktopPath = [Environment]::GetFolderPath('Desktop')
         $shortcut_dest_location = $DesktopPath + '\pycharm-community.lnk'
-        Remove-Item $shortcut_dest_location
+
+        if (Test-Path $shortcut_dest_location)
+        {
+            Remove-Item $shortcut_dest_location
+        }
+        else
+        {
+            Write-Output 'No shortcut exists already on the dektop'
+        }
+
         Write-Output 'Done removing pycharm from your computer'
     }
 }
@@ -28,12 +37,18 @@ $file_name = [System.IO.Path]::GetFileName($url)
 $folder_data_name = [string]$file_name.TrimEnd('.exe')
 
 # Uninstall software
-$dir_program= [Environment]::GetEnvironmentVariable('ProgramFiles')
-$uninstall_directory = $dir_program+'\'+$folder_data_name+'\bin\uninstall.exe'
+$prog_files_dest= [Environment]::GetEnvironmentVariable('ProgramFiles')
+$uninstall_directory = $prog_files_dest+'\'+$folder_data_name+'\bin\uninstall.exe'
 
-$startProc = Start-Process powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Uninstall run}"
-$startProc.WaitForExit()
+Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Uninstall run}"
 
-Start-Process -Wait -FilePath $uninstall_directory -Argument "/S" -PassThru
+if (Test-Path $uninstall_directory)
+{
+    Start-Process -Wait -FilePath $uninstall_directory -Argument "/S" -PassThru
+}
+else
+{
+    Write-Output 'Pycharm directory already does not exists on your computer'
+}
 
 Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Uninstall2 run}"
