@@ -10,7 +10,7 @@
         $file_name = [System.IO.Path]::GetFileName($url)
 
         # Destination folder to remove file from the computer
-        $dest_folder = [Environment]::GetEnvironmentVariable('ProgramFiles')
+        $prog_files_dest = [Environment]::GetEnvironmentVariable('ProgramFiles')
 
         # New folder name for zip data destination
         $folder_data_name = [string]$file_name.TrimEnd('.zip')
@@ -19,11 +19,26 @@
         $DesktopPath = [Environment]::GetFolderPath('Desktop')
         $shortcut_dest_location = $DesktopPath + '\eclipse.lnk'
 
-        # Remove shortuct
-        Remove-Item $shortcut_dest_location
+        if (Test-Path $shortcut_dest_location)
+        {
+            # Remove shortuct
+            Remove-Item $shortcut_dest_location
+        }
+        else
+        {
+            Write-Output 'No shortcut exists already on the dektop'
+        }
 
-        # Uninstall software from the computer
-        Remove-Item $dest_folder'\'$folder_data_name -Recurse
+        $dir_to_remove= $prog_files_dest+'\'+$folder_data_name
+        if (Test-Path $dir_to_remove)
+        {
+            # Uninstall software from the computer
+            Remove-Item  -Recurse
+        }
+        else
+        {
+            Write-Output 'No eclipse directory exists already'
+        }
 
         Write-Output 'Done removing eclipse from your computer'
     }
