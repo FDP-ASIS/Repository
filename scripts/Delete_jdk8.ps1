@@ -20,16 +20,15 @@
 
         # Remove Path Environment
         [System.Environment]::SetEnvironmentVariable('JAVA_HOME', $null, 'Machine')
+        # Get PATH
+        $path = [System.Environment]::GetEnvironmentVariable('PATH', 'Machine')
 
+        # Remove unwanted elements
+        $path = ($path.Split(';') | Where-Object {
+                $_ -ne $folder_data_name + '\bin'
+        }) -join ';'
         if (Test-Path $path)
         {
-            # Get PATH
-            $path = [System.Environment]::GetEnvironmentVariable('PATH', 'Machine')
-
-            # Remove unwanted elements
-            $path = ($path.Split(';') | Where-Object {
-                $_ -ne $folder_data_name + '\bin'
-            }) -join ';'
             [System.Environment]::SetEnvironmentVariable('PATH', $path, 'Machine')
         }
         else

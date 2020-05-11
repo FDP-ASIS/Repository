@@ -33,7 +33,7 @@
         if (Test-Path $dir_to_remove)
         {
             # Uninstall software from the computer
-            Remove-Item  -Recurse
+            Remove-Item $dir_to_remove -Recurse
         }
         else
         {
