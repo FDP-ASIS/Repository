@@ -28,13 +28,13 @@ $Uninstall = {
         # Remove Path Environment
         # Get PATH
         $path = [System.Environment]::GetEnvironmentVariable('PATH', 'Machine')
+        # Remove unwanted elements
+        $path = ($path.Split(';') | Where-Object {
+            $_ -ne $prog_files_dest + "\" + $folder_data_name + "\"
+        }) -join ';'
 
         if (Test-Path $path)
         {
-            # Remove unwanted elements
-            $path = ($path.Split(';') | Where-Object {
-                $_ -ne $prog_files_dest + "\" + $folder_data_name + "\"
-            }) -join ';'
             [System.Environment]::SetEnvironmentVariable('PATH', $path, 'Machine')
         }
         else
