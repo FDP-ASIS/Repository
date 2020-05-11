@@ -9,7 +9,7 @@
         # Get the name of the file
         $file_name = [System.IO.Path]::GetFileName($url)
         # Source of zip file location
-        $source_zip_location = $prog__files_dest+'\'+$file_name
+        $source_zip_location = $prog_files_dest+'\'+$file_name
 
         # Check if zip file already exists
         if (!(Test-Path $source_zip_location))
