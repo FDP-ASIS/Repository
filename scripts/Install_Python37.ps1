@@ -1,6 +1,5 @@
 $Install ={
-    function run
-    {
+    function run {
         Write-Output 'Installing...'
         # Url zip file to download
         $url = 'https://www.python.org/ftp/python/3.7.7/python-3.7.7-embed-amd64.zip'
@@ -12,16 +11,14 @@ $Install ={
         $source_zip_location = $prog_files_dest+'\'+$file_name
 
         # Check if zip file already exists
-        if (!(Test-Path $source_zip_location))
-        {
+        if (!(Test-Path $source_zip_location)) {
             # Start downloading
             Import-Module BitsTransfer
             Start-BitsTransfer -Source $url -Destination $prog_files_dest
             # Write output in 2 different lines
             Write-Output 'Finished downloading zip file' 'Now it will extract the zip file'
         }
-        else
-        {
+        else {
             Write-Output 'File already exists on your computer'
         }
 
@@ -30,19 +27,16 @@ $Install ={
         $data_folder= $prog_files_dest+'\'+ $folder_name_without_zip
 
         # Check if extract data folder already exists
-        if (!(Test-Path $data_folder))
-        {
+        if (!(Test-Path $data_folder)) {
             # Extract zip archive
             Expand-Archive -LiteralPath $source_zip_location -DestinationPath $data_folder'\'
             Write-Output 'Finished extracting'
         }
-        else
-        {
+        else {
             Write-Output 'Folder python data already exists on your computer'
         }
 
-        if (Test-Path $source_zip_location)
-        {
+        if (Test-Path $source_zip_location) {
             # Remove zip file from computer
             Remove-Item $source_zip_location
         }
@@ -57,4 +51,8 @@ $Install ={
     }
 }
 
-Start-Process powershell -Wait -Verb runAs -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Install run}"
+try {
+    Start-Process powershell -Wait -Verb runAs -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Install run}"
+} catch [exception]{
+    Write-Output '$_.Exception is' $_.Exception
+}
