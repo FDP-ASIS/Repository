@@ -1,23 +1,19 @@
 ﻿$Uninstall = {
-    function run
-    {
+    function run {
         Write-Output 'Uninstalling...'
     }
 }
 
 $Uninstall2 = {
-    function run
-    {
+    function run {
         # Remove shortcut from desktop
         $DesktopPath = [Environment]::GetFolderPath('Desktop')
         $shortcut_dest_location = $DesktopPath + '\pycharm-community.lnk'
 
-        if (Test-Path $shortcut_dest_location)
-        {
+        if (Test-Path $shortcut_dest_location) {
             Remove-Item $shortcut_dest_location
         }
-        else
-        {
+        else {
             Write-Output 'No shortcut exists already on the dektop'
         }
 
@@ -40,15 +36,17 @@ $folder_data_name = [string]$file_name.TrimEnd('.exe')
 $prog_files_dest= [Environment]::GetEnvironmentVariable('ProgramFiles')
 $uninstall_directory = $prog_files_dest+'\'+$folder_data_name+'\bin\uninstall.exe'
 
-Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Uninstall run}"
+try {
+    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Uninstall run}"
 
-if (Test-Path $uninstall_directory)
-{
-    Start-Process -Wait -FilePath $uninstall_directory -Argument "/S" -PassThru
-}
-else
-{
-    Write-Output 'Pycharm directory already does not exists on your computer'
-}
+    if (Test-Path $uninstall_directory) {
+        Start-Process -Wait -FilePath $uninstall_directory -Argument "/S" -PassThru
+    }
+    else {
+        Write-Output 'Pycharm directory already does not exists on your computer'
+    }
 
-Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Uninstall2 run}"
+    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Uninstall2 run}"
+} catch [exception]{
+    Write-Output '$_.Exception is' $_.Exception
+}
