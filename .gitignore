@@ -1,6 +1,0 @@
-package-lock.json
-Repository.iml
-node_modules
-.idea
-scripts/Execute_powershell.js
-scripts/windows.ps1
