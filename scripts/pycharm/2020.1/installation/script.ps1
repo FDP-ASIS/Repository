@@ -3,10 +3,18 @@ $Install ={
         param (
             [string] $url,
             [string] $prog_files_dest,
-            [string] $source_exe_location
+            [string] $source_exe_location,
+            [string] $location_config
         )
 
-        Write-Output 'Installing...'
+        Write-Output 'Installing Pycharm, please wait...'
+
+        # download config file from repository
+        $config_url='https://raw.githubusercontent.com/FDP-ASIS/Repository/master/scripts/pycharm/2020.1/installation/silent_pycharm.config'
+
+        # Start downloading
+        Import-Module BitsTransfer
+        Start-BitsTransfer -Source $config_url -Destination $location_config
 
         if (!(Test-Path $source_exe_location)) {
             # Start downloading
@@ -24,7 +32,8 @@ $Shortcut ={
     function run {
         param (
             [string] $source_exe_location,
-            [string] $dest_directory
+            [string] $dest_directory,
+            [string] $config_file
         )
 
         Write-Output 'Finished installing'
@@ -48,6 +57,7 @@ $Shortcut ={
         if (Test-Path $source_exe_location) {
             # Remove exe file from computer
             Remove-Item $source_exe_location
+            Remove-Item $config_file
         }
 
         Write-Output 'Your folder directory located:'$dest_directory
@@ -74,11 +84,11 @@ $folder_data_name = [string]$file_name.TrimEnd('.exe')
 $dest_directory = $prog_files_dest+'\'+$folder_data_name
 
 # Config file for install
-$location_config= $PSScriptRoot
+$location_config= [Environment]::GetEnvironmentVariable('ProgramFiles')
 $config_file = $location_config +'\silent_pycharm.config'
 
 try {
-    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run '$url' '$prog_files_dest' '$source_exe_location'}"
+    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run '$url' '$prog_files_dest' '$source_exe_location' '$location_config'}"
 
     if (!(Test-Path $dest_directory)) {
         Start-Process -Wait -FilePath $source_exe_location -Argument "/S /CONFIG=$config_file /D=$dest_directory" -PassThru
@@ -87,7 +97,7 @@ try {
         Write-Output 'Pycharm directory already exists on your computer'
     }
 
-    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Shortcut run '$source_exe_location' '$dest_directory'}"
+    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Shortcut run '$source_exe_location' '$dest_directory' '$config_file'}"
 } catch [exception]{
     Write-Output '$_.Exception is' $_.Exception
 }

@@ -3,7 +3,7 @@ $Uninstall = {
         # Url zip file to download
         $url = 'https://www.python.org/ftp/python/3.7.7/python-3.7.7-embed-amd64.zip'
 
-        Write-Output 'Uninstalling...'
+        Write-Output 'Uninstalling Python, please wait...'
 
         # Get name of the file
         $file_name = [System.IO.Path]::GetFileName($url)

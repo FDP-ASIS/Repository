@@ -1,6 +1,6 @@
 ﻿$Uninstall = {
     function run {
-        Write-Output 'Uninstalling...'
+        Write-Output 'Uninstalling Pycharm, please wait...'
     }
 }
 

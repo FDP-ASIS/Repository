@@ -1,10 +1,18 @@
 $Install ={
     function run{
         param (
-            [string] $exe_dest
+            [string] $exe_dest,
+            [string] $location_config
         )
 
-        Write-Output 'Installing...'
+        Write-Output 'Installing JDK, please wait...'
+
+        # download config file from repository
+        $config_url='https://raw.githubusercontent.com/FDP-ASIS/Repository/master/scripts/java/8/installation/silent_jdk.config'
+
+        # Start downloading
+        Import-Module BitsTransfer
+        Start-BitsTransfer -Source $config_url -Destination $location_config
 
         # Url exe file to download
         $url = 'http://javadl.oracle.com/webapps/download/AutoDL?BundleId=230542_2f38c3b165be4555a1fa6e98c45e0808'
@@ -27,12 +35,14 @@ $Path_Var ={
     function run {
         param (
             [string] $exe_dest,
-            [string] $folder_data_name
+            [string] $folder_data_name,
+            [string] $config_file
         )
 
         if (Test-Path $exe_dest) {
             # Remove exe file
             Remove-Item $exe_dest
+            Remove-Item $config_file
         }
 
         Write-Output 'Your folder directory located:' $folder_data_name
@@ -56,20 +66,19 @@ $exe_dest = [Environment]::GetEnvironmentVariable('ProgramFiles') + '\'+$JDK_FUL
 $folder_data_name = [Environment]::GetEnvironmentVariable('ProgramFiles') + '\Java\jre ' + $JDK_FULL_VER
 
 # Config file for install
-$location_config= $PSScriptRoot
-$config_file = $location_config + '\silent_jdk.config'
+$location_config= [Environment]::GetEnvironmentVariable('ProgramFiles')
 
 try {
-    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run('$exe_dest')}"
-
+    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run '$exe_dest' '$location_config'}"
+    $config_file = $location_config +'\silent_jdk.config'
     if (!(Test-Path $folder_data_name)) {
-        Start-Process -Wait -FilePath $exe_dest -Argument INSTALLCFG=$config_file -PassThru
+        Start-Process -Wait -FilePath $exe_dest -Argument INSTALLCFG=`"$config_file`" -PassThru
     }
     else {
         Write-Output 'JDK directory already exists on your computer'
     }
 
-    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Path_Var run '$exe_dest' '$folder_data_name'}"
+    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Path_Var run '$exe_dest' '$folder_data_name' '$config_file'}"
 } catch [exception]{
     Write-Output '$_.Exception is' $_.Exception
 }
