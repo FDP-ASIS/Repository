@@ -1,6 +1,6 @@
 $Install ={
     function run {
-        Write-Output 'Installing...'
+        Write-Output 'Installing Python, please wait...'
         # Url zip file to download
         $url = 'https://www.python.org/ftp/python/3.7.7/python-3.7.7-embed-amd64.zip'
         # Destination folder on computer

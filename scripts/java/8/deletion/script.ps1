@@ -3,7 +3,7 @@
         # JDK version name
         $JDK_FULL_VER = '8u151-b12'
 
-        Write-Output 'Uninstalling...'
+        Write-Output 'Uninstalling JDK, please wait...'
 
         # Folder to uninstall
         $folder_data_name = [Environment]::GetEnvironmentVariable('ProgramFiles') + '\Java\jre ' + $JDK_FULL_VER

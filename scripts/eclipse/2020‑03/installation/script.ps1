@@ -1,6 +1,6 @@
 ﻿$Install = {
     function run {
-        Write-Output 'Installing...'
+        Write-Output 'Installing Eclipse, please wait...'
         # Url zip file to download
         $url = 'http://mirror.dkm.cz/eclipse/technology/epp/downloads/release/2020-03/R/eclipse-java-2020-03-R-win32-x86_64.zip'
         # Destination folder to save zip file on computer
