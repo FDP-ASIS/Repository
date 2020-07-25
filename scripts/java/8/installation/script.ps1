@@ -17,17 +17,12 @@ $Install ={
         # Url exe file to download
         $url = 'http://javadl.oracle.com/webapps/download/AutoDL?BundleId=230542_2f38c3b165be4555a1fa6e98c45e0808'
 
-        if (!(Test-Path $exe_dest)) {
-            # Download exe file
-            $client = new-object System.Net.WebClient
-            # Accept oracle cookies
-            $cookie = 'oraclelicense=accept-securebackup-cookie'
-            $client.Headers.Add([System.Net.HttpRequestHeader]::Cookie, $cookie)
-            $client.downloadFile($url, $exe_dest)
-        }
-        else {
-            Write-Output 'JDK file already exists on your computer'
-        }
+        # Download exe file
+        $client = new-object System.Net.WebClient
+        # Accept oracle cookies
+        $cookie = 'oraclelicense=accept-securebackup-cookie'
+        $client.Headers.Add([System.Net.HttpRequestHeader]::Cookie, $cookie)
+        $client.downloadFile($url, $exe_dest)
     }
 }
 
@@ -67,10 +62,18 @@ $folder_data_name = [Environment]::GetEnvironmentVariable('ProgramFiles') + '\Ja
 
 # Config file for install
 $location_config= [Environment]::GetEnvironmentVariable('ProgramFiles')
+$config_file = $location_config +'\silent_jdk.config'
 
 try {
+    if (Test-Path $exe_dest) {
+        Remove-Item $exe_dest
+    }
+
+    if (Test-Path $config_file) {
+        Remove-Item $config_file
+    }
+
     Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run '$exe_dest' '$location_config'}"
-    $config_file = $location_config +'\silent_jdk.config'
     if (!(Test-Path $folder_data_name)) {
         Start-Process -Wait -FilePath $exe_dest -Argument INSTALLCFG=`"$config_file`" -PassThru
     }
