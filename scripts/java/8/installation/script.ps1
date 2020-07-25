@@ -40,6 +40,12 @@ $Install ={
     }
 }
 
+$Install2 ={
+    function run{
+        Write-Output 'The installation is on background, please wait a few minutes until you will get a new powershell window and a finish message...'
+    }
+}
+
 $Path_Var ={
     function run {
         param (
@@ -80,6 +86,7 @@ $config_file = $location_config +'\silent_jdk.config'
 
 try {
     Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run '$exe_dest' '$config_file' '$location_config' '$folder_data_name'}"
+    Start-Process powershell -Verb runAs -PassThru -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Install2 run}"
     Start-Process -Wait -FilePath $exe_dest -Argument INSTALLCFG=`"$config_file`" -PassThru
     Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Path_Var run '$exe_dest' '$folder_data_name' '$config_file'}"
 } catch [exception]{

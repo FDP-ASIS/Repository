@@ -36,6 +36,12 @@ $Install ={
     }
 }
 
+$Install2 ={
+    function run{
+        Write-Output 'The installation is on background, please wait a few minutes until you will get a new powershell window and a finish message...'
+    }
+}
+
 $Shortcut ={
     function run {
         param (
@@ -96,6 +102,7 @@ try {
     $dest_directory = $prog_files_dest+'\'+$folder_data_name
 
     Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run '$url' '$prog_files_dest' '$source_exe_location' '$config_file' '$location_config' '$dest_directory'}"
+    Start-Process powershell -Verb runAs -PassThru -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Install2 run}"
     Start-Process -Wait -FilePath $source_exe_location -Argument "/S /CONFIG=$config_file /D=$dest_directory" -PassThru
     Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Shortcut run '$source_exe_location' '$dest_directory' '$config_file'}"
 } catch [exception]{
