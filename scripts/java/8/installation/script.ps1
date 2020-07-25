@@ -2,10 +2,20 @@ $Install ={
     function run{
         param (
             [string] $exe_dest,
-            [string] $location_config
+            [string] $config_file,
+            [string] $location_config,
+            [string] $folder_data_name
         )
 
         Write-Output 'Installing JDK, please wait...'
+
+        if (Test-Path $exe_dest) {
+            Remove-Item $exe_dest
+        }
+
+        if (Test-Path $config_file) {
+            Remove-Item $config_file
+        }
 
         # download config file from repository
         $config_url='https://raw.githubusercontent.com/FDP-ASIS/Repository/master/scripts/java/8/installation/silent_jdk.config'
@@ -23,6 +33,10 @@ $Install ={
         $cookie = 'oraclelicense=accept-securebackup-cookie'
         $client.Headers.Add([System.Net.HttpRequestHeader]::Cookie, $cookie)
         $client.downloadFile($url, $exe_dest)
+
+        if (Test-Path $folder_data_name) {
+            Remove-Item $folder_data_name -Force -Recurse
+        }
     }
 }
 
@@ -65,22 +79,8 @@ $location_config= [Environment]::GetEnvironmentVariable('ProgramFiles')
 $config_file = $location_config +'\silent_jdk.config'
 
 try {
-    if (Test-Path $exe_dest) {
-        Remove-Item $exe_dest
-    }
-
-    if (Test-Path $config_file) {
-        Remove-Item $config_file
-    }
-
-    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run '$exe_dest' '$location_config'}"
-    if (!(Test-Path $folder_data_name)) {
-        Start-Process -Wait -FilePath $exe_dest -Argument INSTALLCFG=`"$config_file`" -PassThru
-    }
-    else {
-        Write-Output 'JDK directory already exists on your computer'
-    }
-
+    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run '$exe_dest' '$config_file' '$location_config' '$folder_data_name'}"
+    Start-Process -Wait -FilePath $exe_dest -Argument INSTALLCFG=`"$config_file`" -PassThru
     Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Path_Var run '$exe_dest' '$folder_data_name' '$config_file'}"
 } catch [exception]{
     Write-Output '$_.Exception is' $_.Exception

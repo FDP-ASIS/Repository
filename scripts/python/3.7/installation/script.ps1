@@ -1,13 +1,28 @@
 $Install ={
     function run {
-        param (
-            [string] $url,
-            [string] $prog_files_dest,
-            [string] $source_zip_location,
-            [string] $data_folder
-        )
-
         Write-Output 'Installing Python, please wait...'
+
+        # Url zip file to download
+        $url = 'https://www.python.org/ftp/python/3.7.7/python-3.7.7-embed-amd64.zip'
+        # Destination folder on computer
+        $prog_files_dest = [Environment]::GetEnvironmentVariable('ProgramFiles')
+        # Get name of the file
+        $file_name = [System.IO.Path]::GetFileName($url)
+        # Source of zip file location
+        $source_zip_location = $prog_files_dest+'\'+$file_name
+
+        # Check if zip file already exists
+        if (Test-Path $source_zip_location) {
+            Remove-Item $source_zip_location
+        }
+
+        # Create a new folder name for zip data destination
+        $folder_name_without_zip = [string]$file_name.TrimEnd('.zip')
+        $data_folder= $prog_files_dest+'\'+ $folder_name_without_zip
+
+        if (Test-Path $data_folder) {
+            Remove-Item $data_folder -Force -Recurse
+        }
 
         # Start downloading
         Import-Module BitsTransfer
@@ -35,29 +50,7 @@ $Install ={
 }
 
 try {
-    # Url zip file to download
-    $url = 'https://www.python.org/ftp/python/3.7.7/python-3.7.7-embed-amd64.zip'
-    # Destination folder on computer
-    $prog_files_dest = [Environment]::GetEnvironmentVariable('ProgramFiles')
-    # Get name of the file
-    $file_name = [System.IO.Path]::GetFileName($url)
-    # Source of zip file location
-    $source_zip_location = $prog_files_dest+'\'+$file_name
-
-    # Check if zip file already exists
-    if (Test-Path $source_zip_location) {
-        Remove-Item $source_zip_location
-    }
-
-    # Create a new folder name for zip data destination
-    $folder_name_without_zip = [string]$file_name.TrimEnd('.zip')
-    $data_folder= $prog_files_dest+'\'+ $folder_name_without_zip
-
-    if (Test-Path $data_folder) {
-        Remove-Item $data_folder -Force -Recurse
-    }
-
-    Start-Process powershell -Wait -Verb runAs -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Install run '$url' '$prog_files_dest' '$source_zip_location' '$data_folder'}"
+    Start-Process powershell -Wait -Verb runAs -ArgumentList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command & {$Install run}"
 } catch [exception]{
     Write-Output '$_.Exception is' $_.Exception
 }
