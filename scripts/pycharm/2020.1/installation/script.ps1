@@ -16,15 +16,9 @@ $Install ={
         Import-Module BitsTransfer
         Start-BitsTransfer -Source $config_url -Destination $location_config
 
-        if (!(Test-Path $source_exe_location)) {
-            # Start downloading
-            Import-Module BitsTransfer
-            Start-BitsTransfer -Source $url -Destination $prog_files_dest
-        }
-        else
-        {
-            Write-Output 'Pycharm exe file already exists on your computer'
-        }
+        # Start downloading
+        Import-Module BitsTransfer
+        Start-BitsTransfer -Source $url -Destination $prog_files_dest
     }
 }
 
@@ -33,26 +27,19 @@ $Shortcut ={
         param (
             [string] $source_exe_location,
             [string] $dest_directory,
-            [string] $config_file
+            [string] $config_file,
+            [string] $shortcut_dest_location
         )
 
         Write-Output 'Finished installing'
 
-        # Shortcut icon source and location
-        $DesktopPath = [Environment]::GetFolderPath('Desktop')
-        $shortcut_dest_location = $DesktopPath + '\pycharm-community.lnk'
         $source_icon_location = $dest_directory + '\bin\pycharm64.exe'
 
-        if (!(Test-Path $shortcut_dest_location)) {
-            # Create shortcut on desktop
-            $WScriptShell = New-Object -ComObject WScript.Shell
-            $Shortcut = $WScriptShell.CreateShortcut($shortcut_dest_location)
-            $Shortcut.TargetPath = $source_icon_location
-            $Shortcut.Save()
-        }
-        else {
-            Write-Output 'Shortcut icon already exists on desktop'
-        }
+        # Create shortcut on desktop
+        $WScriptShell = New-Object -ComObject WScript.Shell
+        $Shortcut = $WScriptShell.CreateShortcut($shortcut_dest_location)
+        $Shortcut.TargetPath = $source_icon_location
+        $Shortcut.Save()
 
         if (Test-Path $source_exe_location) {
             # Remove exe file from computer
@@ -88,16 +75,31 @@ $location_config= [Environment]::GetEnvironmentVariable('ProgramFiles')
 $config_file = $location_config +'\silent_pycharm.config'
 
 try {
+
+    if (Test-Path $source_exe_location) {
+        Remove-Item $source_exe_location
+    }
+
+    if (Test-Path $config_file) {
+        Remove-Item $config_file
+    }
+
     Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & {$Install run '$url' '$prog_files_dest' '$source_exe_location' '$location_config'}"
 
-    if (!(Test-Path $dest_directory)) {
-        Start-Process -Wait -FilePath $source_exe_location -Argument "/S /CONFIG=$config_file /D=$dest_directory" -PassThru
-    }
-    else {
-        Write-Output 'Pycharm directory already exists on your computer'
+    if (Test-Path $dest_directory) {
+        Remove-Item $dest_directory -Force -Recurse
     }
 
-    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Shortcut run '$source_exe_location' '$dest_directory' '$config_file'}"
+    Start-Process -Wait -FilePath $source_exe_location -Argument "/S /CONFIG=$config_file /D=$dest_directory" -PassThru
+
+    # Shortcut icon source and location
+    $DesktopPath = [Environment]::GetFolderPath('Desktop')
+    $shortcut_dest_location = $DesktopPath + '\pycharm-community.lnk'
+    if (Test-Path $shortcut_dest_location) {
+        Remove-Item $shortcut_dest_location
+    }
+
+    Start-Process -Wait powershell -Verb runAs -PassThru -ArgumentList "-NoProfile -NoExit -ExecutionPolicy Bypass -Command & {$Shortcut run '$source_exe_location' '$dest_directory' '$config_file' '$shortcut_dest_location'}"
 } catch [exception]{
     Write-Output '$_.Exception is' $_.Exception
 }
