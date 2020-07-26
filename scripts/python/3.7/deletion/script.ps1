@@ -1,9 +1,9 @@
 $Uninstall = {
     function run {
+        Write-Host 'Uninstalling Python, please wait...' -ForegroundColor Green
+
         # Url zip file to download
         $url = 'https://www.python.org/ftp/python/3.7.7/python-3.7.7-embed-amd64.zip'
-
-        Write-Output 'Uninstalling Python, please wait...'
 
         # Get name of the file
         $file_name = [System.IO.Path]::GetFileName($url)
@@ -37,7 +37,7 @@ $Uninstall = {
             Write-Output 'Environment variable already does not exists'
         }
 
-        Write-Output 'Done removing python from your computer'
+        Write-Host 'Done removing python from your computer' -ForegroundColor Green
     }
 }
 

@@ -1,6 +1,6 @@
 ﻿$Uninstall = {
     function run {
-        Write-Output 'Uninstalling Pycharm, please wait...'
+        Write-Host 'Uninstalling Pycharm, please wait...' -ForegroundColor Green
     }
 }
 
@@ -17,7 +17,7 @@ $Uninstall2 = {
             Write-Output 'No shortcut exists already on the dektop'
         }
 
-        Write-Output 'Done removing pycharm from your computer'
+        Write-Host 'Done removing pycharm from your computer' -ForegroundColor Green
     }
 }
 

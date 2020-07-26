@@ -56,7 +56,7 @@
         }
 
         Write-Output 'Your folder directory located:'$data_folder
-        Write-Output 'Done installing eclipse on your computer and create shortcut on desktop'
+        Write-Host 'Done installing eclipse on your computer and create shortcut on desktop' -ForegroundColor Green
     }
 }
 

@@ -7,7 +7,7 @@ $Install ={
             [string] $folder_data_name
         )
 
-        Write-Output 'Installing JDK, please wait...'
+        Write-Host 'Installing JDK, please wait...' -ForegroundColor Green
 
         if (Test-Path $exe_dest) {
             Remove-Item $exe_dest
@@ -67,7 +67,7 @@ $Path_Var ={
         [System.Environment]::SetEnvironmentVariable('JAVA_HOME', $folder_data_name, 'Machine')
         [System.Environment]::SetEnvironmentVariable('PATH',$Env:Path + ';' +$folder_data_name+'\bin', 'Machine')
 
-        Write-Output 'Done installing jdk on your computer'
+        Write-Host 'Done installing jdk on your computer' -ForegroundColor Green
     }
 }
 

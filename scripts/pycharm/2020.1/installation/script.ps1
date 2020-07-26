@@ -9,7 +9,7 @@ $Install ={
             [string] $dest_directory
         )
 
-        Write-Output 'Installing Pycharm, please wait...'
+        Write-Host 'Installing Pycharm, please wait...' -ForegroundColor Green
 
         if (Test-Path $source_exe_location) {
             Remove-Item $source_exe_location
@@ -74,7 +74,7 @@ $Shortcut ={
         }
 
         Write-Output 'Your folder directory located:'$dest_directory
-        Write-Output 'Done installing pycharm on your computer and create shortcut on desktop'
+        Write-Host 'Done installing pycharm on your computer and create shortcut on desktop' -ForegroundColor Green
     }
 }
 

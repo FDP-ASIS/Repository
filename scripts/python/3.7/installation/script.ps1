@@ -1,6 +1,6 @@
 $Install ={
     function run {
-        Write-Output 'Installing Python, please wait...'
+        Write-Host 'Installing Python, please wait...' -ForegroundColor Green
 
         # Url zip file to download
         $url = 'https://www.python.org/ftp/python/3.7.7/python-3.7.7-embed-amd64.zip'
@@ -45,7 +45,7 @@ $Install ={
         Write-Output 'Setting up Path variables.'
         [System.Environment]::SetEnvironmentVariable('PATH', $Env:Path + ';' + $data_folder+'\', 'Machine')
 
-        Write-Output 'Done installing python on your computer'
+        Write-Host 'Done installing python on your computer' -ForegroundColor Green
     }
 }
 

@@ -3,7 +3,7 @@
         # Url zip file to download
         $url = 'http://mirror.dkm.cz/eclipse/technology/epp/downloads/release/2020-03/R/eclipse-java-2020-03-R-win32-x86_64.zip'
 
-        Write-Output 'Uninstalling Eclipse, please wait...'
+        Write-Host 'Uninstalling Eclipse, please wait...' -ForegroundColor Green
 
         # Get the name of the file
         $file_name = [System.IO.Path]::GetFileName($url)
@@ -35,7 +35,7 @@
             Write-Output 'No eclipse directory exists already'
         }
 
-        Write-Output 'Done removing eclipse from your computer'
+        Write-Host 'Done removing eclipse from your computer' -ForegroundColor Green
     }
 }
 

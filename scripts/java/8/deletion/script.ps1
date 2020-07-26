@@ -3,7 +3,7 @@
         # JDK version name
         $JDK_FULL_VER = '8u151-b12'
 
-        Write-Output 'Uninstalling JDK, please wait...'
+        Write-Host 'Uninstalling JDK, please wait...' -ForegroundColor Green
 
         # Folder to uninstall
         $folder_data_name = [Environment]::GetEnvironmentVariable('ProgramFiles') + '\Java\jre ' + $JDK_FULL_VER
@@ -31,7 +31,7 @@
             Write-Output 'Environment variable already does not exists'
         }
 
-        Write-Output 'Done removing jdk from your computer'
+        Write-Host 'Done removing jdk from your computer' -ForegroundColor Green
     }
 }
 
